@@ -31,7 +31,7 @@ ParrelSync can also be installed via UPM package.
 After Unity 2019.3.4f1, Unity 2020.1a21, which support path query parameter of git package. You can install ParrelSync by adding the following to Package Manager.
 
 ```
-https://github.com/VeriorPies/ParrelSync.git?path=/ParrelSync
+https://github.com/dmitry-ivashenko/ParrelSync.git?path=/ParrelSync
 ```  
 
   
@@ -40,7 +40,7 @@ https://github.com/VeriorPies/ParrelSync.git?path=/ParrelSync
 or by adding 
 
 ```
-"com.veriorpies.parrelsync": "https://github.com/VeriorPies/ParrelSync.git?path=/ParrelSync"
+"com.veriorpies.parrelsync": "https://github.com/dmitry-ivashenko/ParrelSync.git?path=/ParrelSync"
 ``` 
 
 to the `Packages/manifest.json` file 
