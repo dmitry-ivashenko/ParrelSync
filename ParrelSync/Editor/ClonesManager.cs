@@ -157,7 +157,8 @@ namespace ParrelSync
             Project sourceProject = new Project(sourceProjectPath);
             Project cloneProject = new Project(cloneProjectPath);
             
-            Directory.Delete(cloneProject.projectSettingsPath, true);
+            if (Directory.Exists(cloneProject.projectSettingsPath))
+                Directory.Delete(cloneProject.projectSettingsPath, true);
             
             ClonesManager.CopyDirectoryWithProgressBar(sourceProject.projectSettingsPath, 
                 cloneProject.projectSettingsPath, "Cloning Project Settings '" + sourceProject.name + "'. ");
@@ -174,6 +175,12 @@ namespace ParrelSync
                     break;
                 }
             }
+            
+            var cloneManifestPath = $"{cloneProject.packagesPath}/manifest.json";
+            if (File.Exists(cloneManifestPath))
+                File.Delete(cloneManifestPath);
+            
+            File.Copy($"{sourceProject.packagesPath}/manifest.json", cloneManifestPath);
         }
 
         /// <summary>
