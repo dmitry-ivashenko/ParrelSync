@@ -88,12 +88,12 @@ namespace ParrelSync
         }
         public List<string> Deserialize(string data)
         {
-            return data.Split(serializationToken).ToList();
+            return data.Split(serializationToken.ToCharArray()).ToList();
         }
     }
     public class Preferences : EditorWindow
     {
-        [MenuItem("ParrelSync/Preferences", priority = 1)]
+        [MenuItem("Tools/ParrelSync/Preferences", priority = 1)]
         private static void InitWindow()
         {
             Preferences window = (Preferences)EditorWindow.GetWindow(typeof(Preferences));

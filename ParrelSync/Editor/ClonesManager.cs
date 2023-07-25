@@ -107,11 +107,11 @@ namespace ParrelSync
             Debug.Log("Packages copy: " + cloneProject.libraryPath);
             ClonesManager.CopyDirectoryWithProgressBar(sourceProject.packagesPath, cloneProject.packagesPath,
               "Cloning Project Packages '" + sourceProject.name + "'. ");
-
+            
+            SyncProjectSettings(cloneProject.projectPath);
 
             //Link Folders
             ClonesManager.LinkFolders(sourceProject.assetPath, cloneProject.assetPath);
-            ClonesManager.LinkFolders(sourceProject.projectSettingsPath, cloneProject.projectSettingsPath);
             ClonesManager.LinkFolders(sourceProject.autoBuildPath, cloneProject.autoBuildPath);
             ClonesManager.LinkFolders(sourceProject.localPackages, cloneProject.localPackages);
             
@@ -136,6 +136,44 @@ namespace ParrelSync
             ClonesManager.RegisterClone(cloneProject);
 
             return cloneProject;
+        }
+
+        public static void SyncProjectSettings(string cloneProjectPath)
+        {
+            if (!Directory.Exists(cloneProjectPath))
+            {
+                Debug.LogError("Cannot open the project - provided folder (" + cloneProjectPath + ") does not exist.");
+                return;
+            }
+
+            if (cloneProjectPath == ClonesManager.GetCurrentProjectPath())
+            {
+                Debug.LogError("Cannot open the project - it is already open.");
+                return;
+            }
+            
+            string sourceProjectPath = ClonesManager.GetOriginalProjectPath();
+            
+            Project sourceProject = new Project(sourceProjectPath);
+            Project cloneProject = new Project(cloneProjectPath);
+            
+            Directory.Delete(cloneProject.projectSettingsPath, true);
+            
+            ClonesManager.CopyDirectoryWithProgressBar(sourceProject.projectSettingsPath, 
+                cloneProject.projectSettingsPath, "Cloning Project Settings '" + sourceProject.name + "'. ");
+
+            var projectSettingsPath = $"{cloneProject.projectSettingsPath}/ProjectSettings.asset";
+            var lines = File.ReadAllLines(projectSettingsPath);
+            
+            foreach (var line in lines)
+            {
+                if (line.Contains("productName:"))
+                {
+                    var newLine = $"  productName: {cloneProject.name}";
+                    File.WriteAllText(projectSettingsPath, File.ReadAllText(projectSettingsPath).Replace(line, newLine));
+                    break;
+                }
+            }
         }
 
         /// <summary>
